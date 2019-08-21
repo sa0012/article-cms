@@ -1,0 +1,15 @@
+{
+  "appid": "81049",
+  "secret": "30be0523d2e6d3d753b026bc9b3fa1d54a4dacfd",
+  "logdir": "/tmp",
+  "error_log": [
+    "/home/insaic-cms/logs/errors/error-#YYYY#-#MM#-#DD#.log"
+  ],
+  "packages": [
+    "/home/insaic-cms/package.json"
+  ],
+  "disks": [
+    "/home"
+  ],
+  "agentidMode": "10.118.22.173"
+}
