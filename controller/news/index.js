@@ -49,6 +49,15 @@ class newsComponent extends CheckComponent {
         timeNum,
         note_type: note_type.is_publish
       }
+
+      if (edit_time) {
+        let reqTime = +(new Date(edit_time))
+        let queryTime = await Article.find({ edit_time })
+        if (queryTime.length > 1) {
+          options.timeNum = reqTime + 1
+        }
+      }
+
       let result = await Article.findOneAndUpdate({
         _id: _id
       }, options, {
@@ -99,6 +108,16 @@ class newsComponent extends CheckComponent {
         timeNum,
         note_type: note_type.is_draft
       }
+      
+      if (edit_time) {
+        let reqTime = +(new Date(edit_time))
+        let queryTime = await Article.find({ edit_time })
+        if (queryTime.length > 1) {
+          console.log(222222)
+          options.timeNum = reqTime + 1
+        }
+      }
+
       let result = null;
       if (!_id) {
         options.create_time = edit_time || moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
@@ -287,9 +306,6 @@ class newsComponent extends CheckComponent {
     try {
       let res = await Article.find(config, null, options);
       let totalResult = await Article.find(config);
-      // res = res.sort((a, b) => {
-      //   return b.timeNum - a.timeNum
-      // });
       let total = totalResult.length;
       ctx.body = {
         code: 200,
@@ -345,10 +361,10 @@ class newsComponent extends CheckComponent {
           );
 
           // 根据当前ID查询上一条，下一条记录
-          const prev = await Article.find({ timeNum: { $gt: timeNum }, note_type: 'PUBLISH' })
+          const prev = await Article.find({ timeNum: { $gt: timeNum }, _id: { $ne: _id }, note_type: 'PUBLISH' })
             .sort({ timeNum: 1 })
             .limit(1);
-          const next = await Article.find({ timeNum: { $lt: timeNum }, note_type: 'PUBLISH' })
+          const next = await Article.find({ timeNum: { $lt: timeNum }, _id: { $ne: _id }, note_type: 'PUBLISH' })
             .sort({ timeNum: -1 })
             .limit(1);
           ctx.body = {
