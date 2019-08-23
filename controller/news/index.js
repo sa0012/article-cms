@@ -50,14 +50,6 @@ class newsComponent extends CheckComponent {
         note_type: note_type.is_publish
       }
 
-      if (edit_time) {
-        let reqTime = +(new Date(edit_time))
-        let queryTime = await Article.find({ edit_time })
-        if (queryTime.length > 1) {
-          options.timeNum = reqTime + 1
-        }
-      }
-
       let result = await Article.findOneAndUpdate({
         _id: _id
       }, options, {
@@ -109,15 +101,6 @@ class newsComponent extends CheckComponent {
         note_type: note_type.is_draft
       }
       
-      if (edit_time) {
-        let reqTime = +(new Date(edit_time))
-        let queryTime = await Article.find({ edit_time })
-        if (queryTime.length > 1) {
-          console.log(222222)
-          options.timeNum = reqTime + 1
-        }
-      }
-
       let result = null;
       if (!_id) {
         options.create_time = edit_time || moment(new Date()).format('YYYY-MM-DD HH:mm:ss');
@@ -361,12 +344,38 @@ class newsComponent extends CheckComponent {
           );
 
           // 根据当前ID查询上一条，下一条记录
-          const prev = await Article.find({ timeNum: { $gt: timeNum }, _id: { $ne: _id }, note_type: 'PUBLISH' })
+          const prevResult = await Article.find({ timeNum: { $gte: timeNum }, note_type: 'PUBLISH' })
             .sort({ timeNum: 1 })
-            .limit(1);
-          const next = await Article.find({ timeNum: { $lt: timeNum }, _id: { $ne: _id }, note_type: 'PUBLISH' })
+          const nextResult = await Article.find({ timeNum: { $lte: timeNum }, note_type: 'PUBLISH' })
             .sort({ timeNum: -1 })
-            .limit(1);
+          
+          let prevIndex = 0;
+          let nextIndex = 0;
+          let prev = [];
+          let next = [];
+          console.log(prevResult.length, nextResult.length, 'length')
+          if (prevResult.length > 0) {
+            prevIndex = prevResult.findIndex(item => {
+              return item._id == _id;
+            });
+            console.log(prevIndex, (prevIndex >= 0 && prevIndex < prevResult.length - 1), 'pIndex')
+            if (prevIndex >= 0 && prevIndex < prevResult.length - 1) {
+              console.log(prevResult[prevIndex + 1], 'prev')
+              prev = [prevResult[prevIndex + 1]]
+            }
+          }
+          if (nextResult.length > 0) {
+            nextIndex = nextResult.findIndex(item => {
+              return item._id == _id;
+            });
+            console.log(nextIndex, 'nIndex')
+            if (nextIndex >= 0 && nextIndex < nextResult.length - 1) {
+              console.log(nextResult[nextIndex + 1], 'next')
+              next = [nextResult[nextIndex + 1]]
+            }
+          }
+
+          console.log(prev, next)
           ctx.body = {
             code: 200,
             result: {

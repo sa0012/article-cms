@@ -11,6 +11,8 @@ mongoose.connect("mongodb://insaic:Pass1234@0.0.0.0:27017/insaic", {
   }
 });
 
+mongoose.set('useCreateIndex', true);
+
 let Schema = mongoose.Schema;
 
 let userSchema = new Schema({
@@ -79,6 +81,7 @@ let uploadSchema = new Schema({
     default: ''
   }
 })
+
 
 // 文章表
 exports.Article = mongoose.model('Article', articleSchema);
