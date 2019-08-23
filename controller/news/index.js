@@ -353,14 +353,11 @@ class newsComponent extends CheckComponent {
           let nextIndex = 0;
           let prev = [];
           let next = [];
-          console.log(prevResult.length, nextResult.length, 'length')
           if (prevResult.length > 0) {
             prevIndex = prevResult.findIndex(item => {
               return item._id == _id;
             });
-            console.log(prevIndex, (prevIndex >= 0 && prevIndex < prevResult.length - 1), 'pIndex')
             if (prevIndex >= 0 && prevIndex < prevResult.length - 1) {
-              console.log(prevResult[prevIndex + 1], 'prev')
               prev = [prevResult[prevIndex + 1]]
             }
           }
@@ -368,14 +365,11 @@ class newsComponent extends CheckComponent {
             nextIndex = nextResult.findIndex(item => {
               return item._id == _id;
             });
-            console.log(nextIndex, 'nIndex')
             if (nextIndex >= 0 && nextIndex < nextResult.length - 1) {
-              console.log(nextResult[nextIndex + 1], 'next')
               next = [nextResult[nextIndex + 1]]
             }
           }
 
-          console.log(prev, next)
           ctx.body = {
             code: 200,
             result: {
