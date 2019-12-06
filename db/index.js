@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const moment = require('moment');
 // mongodb://insaic:Pass1234@0.0.0.0:27017/insaic
-mongoose.connect("mongodb://insaic:Pass1234@0.0.0.0:27017/insaic", {
+mongoose.connect("mongodb://0.0.0.0:27017/insaic", {
   useNewUrlParser: true
 }, function (err) {
   if (err) {
